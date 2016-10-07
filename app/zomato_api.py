@@ -11,6 +11,7 @@ headers = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key"
 
 
 def get_random_restaurant(location='lisbon',category=None):
+
     city_id = get_city_id(location)
     if not city_id:
 		return "City not found"
@@ -33,7 +34,9 @@ def get_city_id(city='lisbon'):
     r = requests.get("https://developers.zomato.com/api/v2.1/cities?q="+city, headers=headers)
     response = json.loads(r.content)
     #only gets the first result
-    return response['location_suggestions'][0]['id']
+    if response['location_suggestions']:
+    	return response['location_suggestions'][0]['id']
+    return ''
 
 
 def get_categories():
