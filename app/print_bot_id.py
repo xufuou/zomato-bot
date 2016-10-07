@@ -1,7 +1,7 @@
 import os
 from slackclient import SlackClient
 
-SLACK_BOT_TOKEN = 'xoxb-88517077826-j2cs3fkts40mcjttAIkDJkxO'
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 BOT_NAME = 'zomato-bot'
 
 slack_client = SlackClient(SLACK_BOT_TOKEN)

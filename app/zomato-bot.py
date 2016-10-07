@@ -1,17 +1,23 @@
 import os
 import time
 from slackclient import SlackClient
-from zomato_api import search_by_location
+from zomato_api import get_categories, get_random_restaurant
 import json
+from dotenv import load_dotenv
+load_dotenv(".env")
+
+# adapted from https://www.fullstackpython.com/blog/build-first-slack-bot-python.html
 
 
-# starterbot's ID as an environment variable
-BOT_ID = 'U2LF729QA'
-SLACK_BOT_TOKEN = 'xoxb-88517077826-j2cs3fkts40mcjttAIkDJkxO'
+BOT_ID = os.environ.get("BOT_ID")
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
+
+
 
 # constants
 AT_BOT = "<@" + BOT_ID + ">"
-EXAMPLE_COMMAND = "fu"
+
+
 
 # instantiate Slack & Twilio clients
 slack_client = SlackClient(SLACK_BOT_TOKEN)
@@ -23,14 +29,20 @@ def handle_command(command, channel):
         are valid commands. If so, then acts on the commands. If not,
         returns back what it needs for clarification.
     """
+    response ='Not sure what you mean. Available commands: \n `random` to get a random restaurant \n `random _number_` to get a random restaurant from a category \n `categories` to list available restaurant categories'
 
-    response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
-               "* command with numbers, delimited by spaces."
-    if command.startswith(EXAMPLE_COMMAND):
-        response = search_by_location()
+    if command.startswith('categories'):
+        response = get_categories()
         print response
+
+    elif command.startswith('random'):
+        print command[7:]
+        if command[7:].isdigit():
+            response = get_random_restaurant(category=command[7:])
+        else:
+            response = get_random_restaurant()
     slack_client.api_call("chat.postMessage", channel=channel,
-                          text=json.dumps(response), as_user=True)
+                          text=response, as_user=True)
 
 
 def parse_slack_output(slack_rtm_output):
