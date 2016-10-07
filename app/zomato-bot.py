@@ -36,11 +36,15 @@ def handle_command(command, channel):
         print response
 
     elif command.startswith('random'):
-        print command[7:]
-        if command[7:].isdigit():
-            response = get_random_restaurant(category=command[7:])
-        else:
+        if len(command)==6:
             response = get_random_restaurant()
+
+        elif command[7:].isdigit():
+            response = get_random_restaurant(category=command[7:])
+
+        else:
+            response = get_random_restaurant(location=command[7:])
+            
     slack_client.api_call("chat.postMessage", channel=channel,
                           text=response, as_user=True)
 
