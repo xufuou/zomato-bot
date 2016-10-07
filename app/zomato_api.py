@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import pprint
 from random import randint
 from dotenv import load_dotenv
 load_dotenv(".env")
@@ -10,6 +11,8 @@ headers = {"User-agent": "curl/7.43.0","Accept": "application/json", "user_key":
 def get_random_restaurant(location='lisbon',category=None):
 
 	city_id = get_city_id(location)
+	if not city_id:
+		return "City not found"
 
 	if category:
 		print 'got into category'
@@ -22,7 +25,7 @@ def get_random_restaurant(location='lisbon',category=None):
 	if response['results_found']>0:
 		index = randint(0,len(response['restaurants'])-1)
 		return '*'+response['restaurants'][index]['restaurant']['name'].upper()+'*' + ' \n' + response['restaurants'][index]['restaurant']['url']
-	return 'Well probably it is time you try something different' 
+	return 'Well probably it is time you try something different'
 
 
 def get_city_id(city='lisbon'):
@@ -30,11 +33,13 @@ def get_city_id(city='lisbon'):
 	r = requests.get("https://developers.zomato.com/api/v2.1/cities?q="+city, headers=headers)
 	response = json.loads(r.content)
 	#only gets the first result
-	return response['location_suggestions'][0]['id']
+	if response['location_suggestions']:
+		return response['location_suggestions'][0]['id']
+	return ""
 
 
 def get_categories():
-	
+
 	r=requests.get("https://developers.zomato.com/api/v2.1/categories", headers=headers)
 	response = json.loads(r.content)
 
@@ -46,7 +51,7 @@ def get_categories():
 
 
 def get_restaurant_by_category(category):
-	
+
 	r = requests.get("https://developers.zomato.com/api/v2.1/categories", headers=headers)
 	response = json.loads(r.content)
 	ids = []

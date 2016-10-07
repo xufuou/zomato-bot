@@ -44,7 +44,7 @@ def handle_command(command, channel):
 
         else:
             response = get_random_restaurant(location=command[7:])
-            
+
     slack_client.api_call("chat.postMessage", channel=channel,
                           text=response, as_user=True)
 
