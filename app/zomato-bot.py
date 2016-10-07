@@ -11,14 +11,8 @@ load_dotenv(".env")
 
 BOT_ID = os.environ.get("BOT_ID")
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-
-
-
 # constants
 AT_BOT = "<@" + BOT_ID + ">"
-
-
-
 # instantiate Slack & Twilio clients
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 
@@ -57,12 +51,14 @@ def parse_slack_output(slack_rtm_output):
     """
     print slack_rtm_output
     output_list = slack_rtm_output
+
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output and AT_BOT in output['text']:
                 # return text after the @ mention, whitespace removed
                 return output['text'].split(AT_BOT)[1].strip().lower(), \
-                       output['channel']
+                   output['channel']
+
     return None, None
 
 
