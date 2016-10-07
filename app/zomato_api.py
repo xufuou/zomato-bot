@@ -9,12 +9,11 @@ load_dotenv(".env")
 
 headers = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key":os.environ.get("ZOMATO_USER_KEY")}
 
-	city_id = get_city_id(location)
-	if not city_id:
-		return "City not found"
 
 def get_random_restaurant(location='lisbon',category=None):
     city_id = get_city_id(location)
+    if not city_id:
+		return "City not found"
 
     if category:
         print 'Got into category'
