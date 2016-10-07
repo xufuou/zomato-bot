@@ -32,12 +32,19 @@ def handle_command(command, channel):
     elif command.startswith('random'):
         if len(command)==6:
             response = get_random_restaurant()
+            # @zomato-bot random
 
         elif command[7:].isdigit():
             response = get_random_restaurant(category=command[7:])
-
+            # @zomato-bot random 5
         else:
-            response = get_random_restaurant(location=command[7:])
+            try:
+                float(command[7:])
+                response = 'Category not found'
+                # @zomato-bot random 5.5
+            except ValueError:
+                response = get_random_restaurant(location=command[7:])
+                # @zomato-bot random lisbon
 
     slack_client.api_call("chat.postMessage", channel=channel,
                           text=response, as_user=True)

@@ -14,11 +14,14 @@ def get_random_restaurant(location='lisbon',category=None):
 
     city_id = get_city_id(location)
     if not city_id:
-		return "City not found"
-
+		return 'City not found'
     if category:
-        print 'Got into category'
-        r = requests.get('https://developers.zomato.com/api/v2.1/search?entity_id=' + str(city_id) + '&entity_type=city&category='+str(category)+'&sort=rating&order=desc', headers=headers)
+        category = int(category)
+        if category > 0 and category <= 14:
+            print 'Got into category'
+            r = requests.get('https://developers.zomato.com/api/v2.1/search?entity_id=' + str(city_id) + '&entity_type=city&category='+str(category)+'&sort=rating&order=desc', headers=headers)
+        else:
+            return 'Category not found'
     else:
         r = requests.get('https://developers.zomato.com/api/v2.1/search?entity_id=' + str(city_id) + '&entity_type=city&sort=rating&order=desc', headers=headers)
 
